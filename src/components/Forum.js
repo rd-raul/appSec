@@ -59,7 +59,7 @@ class Forum extends Component {
 					return(
 						<div className = "forum-container">
 							<div>{data.name}</div>
-							<div>{data.post}</div>
+							<div dangerouslySetInnerHTML={{ __html: data.post }} ></div>
 						</div>
 					)
 				})}
