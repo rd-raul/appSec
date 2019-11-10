@@ -1,0 +1,15 @@
+.forum-container{
+	display: flex;
+    justify-content: space-between;
+    width: 500px;
+    margin: 20px 0px;
+    border: 1px solid;
+    padding: 5px;
+}
+.createButton{
+	border: none;
+    background: #c0cbf5;
+    padding: 10px;
+	border-radius: 5px;
+	cursor: pointer;
+}

@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import axios from "axios";
 
 class Register extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			fullname: '',
-			email: '',
+			username: '',
 			password: ''
 		};
 
@@ -26,12 +26,14 @@ class Register extends Component {
 
 	displayLogin(e) {
 		e.preventDefault();
-		console.log('You have successfully registered');
-		console.log(this.state);
-		this.setState({
-			fullname: '',
-			email: '',
-			password: ''
+		const bodyParam = {
+			name: this.state.username,
+			password: this.state.password
+		}
+		axios
+		.post(`http://ec2-54-213-58-16.us-west-2.compute.amazonaws.com:8080/user/create`, bodyParam)
+		.then(res => {
+			this.props.history.push('/forum');
 		});
 	}
 
@@ -45,18 +47,8 @@ class Register extends Component {
 						<input
 							type="text"
 							placeholder="Full Name"
-							name="fullname"
-							value={this.state.fullname}
-							onChange={this.update}
-						/>
-					</div>
-
-					<div className="email">
-						<input
-							type="text"
-							placeholder="Enter your email"
-							name="email"
-							value={this.state.email}
+							name="username"
+							value={this.state.username}
 							onChange={this.update}
 						/>
 					</div>
