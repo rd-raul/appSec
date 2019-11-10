@@ -1,4 +1,3 @@
-A simple React Login/Register Form
 
 Used create-react-app to bootstrap the project
 Git clone the repo
