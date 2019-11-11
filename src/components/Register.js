@@ -8,7 +8,8 @@ class Register extends Component {
 
 		this.state = {
 			username: '',
-			password: ''
+			password: '',
+			confirmPassword: ''
 		};
 
 		this.update = this.update.bind(this);
@@ -30,11 +31,16 @@ class Register extends Component {
 			name: this.state.username,
 			password: this.state.password
 		}
-		axios
-		.post(`http://ec2-54-213-58-16.us-west-2.compute.amazonaws.com:8080/user/create`, bodyParam)
-		.then(res => {
-			this.props.history.push('/forum');
-		});
+		if(this.state.password === this.state.confirmPassword){
+			axios
+			.post(`http://ec2-54-213-58-16.us-west-2.compute.amazonaws.com:8080/user/create`, bodyParam)
+			.then(res => {
+				this.props.history.push('/forum');
+			});
+		}
+		else{
+			alert('Passwords dont match');
+		}
 	}
 
 	render() {
@@ -64,10 +70,10 @@ class Register extends Component {
 					</div>
 
 					<div className="password">
-						<input type="password" placeholder="Confirm Password" name="password1" />
+						<input type="password" onChange={this.update} placeholder="Confirm Password" name="confirmPassword" />
 					</div>
 
-					<input type="submit" value="Login" />
+					<input type="submit" value="Sign Up" />
 				</form>
 
 				<Link to="/">Login Here</Link>
