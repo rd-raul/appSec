@@ -12,6 +12,10 @@ body {
   height: 100vh;
 }
 
+.error {
+  color: red
+}
+
 .login,
 .register {
   width: 400px;

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 
 class Login extends Component {
   constructor(props) {
@@ -8,13 +7,34 @@ class Login extends Component {
 
     this.state = {
       username: "",
-      password: ""
+      password: "",
+      error: ""
     };
 
     this.update = this.update.bind(this);
 
     this.loginClick = this.loginClick.bind(this);
   }
+
+  setCookie = (name, value, days) => {
+    var expires = "";
+    if (days) {
+      var date = new Date();
+      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+      expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/";
+  };
+  getCookie = name => {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(";");
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == " ") c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+  };
 
   update(e) {
     let name = e.target.name;
@@ -24,17 +44,35 @@ class Login extends Component {
     });
   }
 
-  loginClick(e) {
+  async loginClick(e) {
     e.preventDefault();
-    const bodyParam = {
-        name: this.state.username,
-        password: this.state.password
-    }
-    axios
-      .post(`http://ec2-54-213-58-16.us-west-2.compute.amazonaws.com:8080/user/login`, bodyParam)
-      .then(res => {
-          this.props.history.push('/forum');
+    if (this.state.password.length < 6) {
+      this.setState({
+        error: "Please enter the password with atleast 6 characters"
       });
+      return;
+    }
+    const bodyParam = {
+      name: this.state.username,
+      password: this.state.password
+    };
+    try {
+      let response = await fetch(
+        "http://ec2-54-213-58-16.us-west-2.compute.amazonaws.com:8080/user/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(bodyParam)
+        }
+      );
+      let result = await response.json();
+      this.setCookie("token", Date.now(), 1);
+      this.props.history.push("/forum");
+    } catch (error) {
+      this.setState({ error: "Invalid Username/Password combination" });
+    }
   }
 
   render() {
@@ -63,6 +101,7 @@ class Login extends Component {
           <input type="submit" value="Login" />
         </form>
         <Link to="/register"> Create an account </Link>{" "}
+        <h4 className="error"> {this.state.error}</h4>
       </div>
     );
   }
