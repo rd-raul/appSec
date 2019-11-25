@@ -46,9 +46,9 @@ class Login extends Component {
 
   async loginClick(e) {
     e.preventDefault();
-    if (this.state.password.length < 6) {
+    if (this.state.password.length < 8) {
       this.setState({
-        error: "Please enter the password with atleast 6 characters"
+        error: "Please enter the password with atleast 8 characters"
       });
       return;
     }
